@@ -10,6 +10,7 @@ class FormProvider extends ChangeNotifier {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _dropdownController = TextEditingController();
 
   bool _isAccept = false;
 
@@ -43,12 +44,14 @@ class FormProvider extends ChangeNotifier {
     _emailController.clear();
     _nameController.clear();
     _phoneController.clear();
+    _dropdownController.clear();
     _isAccept = false;
     isValidForm = false;
     formKey = GlobalKey<FormState>();
     notifyListeners();
   }
 
+  TextEditingController get dropdownController => _dropdownController;
   TextEditingController get passController => _passController;
   TextEditingController get emailController => _emailController;
   TextEditingController get nameController => _nameController;

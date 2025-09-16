@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:formularios_providers/providers/form_provider.dart';
+import 'package:formularios_providers/widgets/dropdown.dart';
+import 'package:formularios_providers/widgets/email_field.dart';
 import 'package:formularios_providers/widgets/name_field.dart';
+import 'package:formularios_providers/widgets/pass_field.dart';
+import 'package:formularios_providers/widgets/phone_field.dart';
 import 'package:formularios_providers/widgets/terms_checkbox.dart';
 import 'package:provider/provider.dart';
 
@@ -53,59 +57,25 @@ class _FormsScreenState extends State<FormsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Seleccione un país',
-                ),
-                initialValue: _selectedCountry,
-                hint: const Text('Seleccione su país'),
-                items: countries.map((country) {
-                  return DropdownMenuItem(
-                    value: country,
-                    child: Text(country),
-                  );
-                }).toList(),
-                onChanged: (value) {
+              // Country Dropdown
+              //------------------------------------------------
+              DropdownField(
+                dropdownController: formProvider.dropdownController, 
+                selectedCountry: _selectedCountry, 
+                countries: countries, 
+                onchanged: (value) {
                   setState(() {
                     _selectedCountry = value;
                   });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor seleccione un país';
-                  }
-                  return null;
                 },
               ),
 
               const SizedBox(height: 20),
 
 
-
-
               // Nombre
               //------------------------------------------------
-              /*
-              TextFormField(
-                controller: _nameController,
-                keyboardType: TextInputType.name,
-                decoration: const InputDecoration(
-                  labelText: "Nombre",
-                  hintText: 'Introduzca su nombre',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ponga su nombre';
-                  }
-                  return null;
-                },
-              ),
-              */
-
-              //NameField(nameController: _nameController), // Usando el widget NameField con el controlador
               NameField(nameController: formProvider.nameController), // Usando el widget NameField con el controlador del provider
-
 
               SizedBox(height: 20.0),
 
@@ -114,97 +84,36 @@ class _FormsScreenState extends State<FormsScreen> {
 
               // Email
               //------------------------------------------------
-              TextFormField(
-                controller: formProvider.emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  hintText: 'Introduzca su email',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor escriba su email';
-                  }
-                  if(!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Por favor escriba un email valido';
-                  }
-                  return null;
-                },
-              ),
+              EmailField(emailController:   formProvider.emailController), // Usando el widget EmailField con el controlador del provider
+
               SizedBox(height: 20.0),              
+
 
 
               // Telefono
               //--------------------------------------------------------
-              TextFormField(
-                controller: formProvider.phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  labelText: 'Introduce tu teléfono',
-                  hintText: '666552233',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor escriba su teléfono';
-                  }
-                  if(!RegExp(r'^\d{9}$').hasMatch(value)) {
-                    return 'Por favor escriba un teléfono valido';
-                  }
-                  return null;
-                },
-              ),
+              PhoneField(phoneController:   formProvider.phoneController), // Usando el widget PhoneField con el controlador del provider
+
               const SizedBox(height: 20),
+
 
 
               // Contraseña
               //--------------------------------------------------------
-              TextFormField(
-                controller: formProvider.passController,
-                obscureText: true,
-                keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(
-                  //border: OutlineInputBorder(),
-                  labelText: 'Introduce tu contraseña',
-                  //hintText: '********',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor escriba una contraseña';
-                  }
-                  if(!RegExp(r'^.{3}$').hasMatch(value)) {
-                    return 'Por favor escriba una contraseña válida';
-                  }
-                  return null;
-                },
-              ),
+              PassField(passController: formProvider.passController), // Usando el widget PassField con el controlador del provider
+
               const SizedBox(height: 20),
 
 
 
               // Términos y condiciones
               //--------------------------------------------------------
-
-  /*
-              Row(
-                children: [
-                  Checkbox(
-                    value: _isAccept,
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        _isAccept = newValue ?? false;
-                      });
-                    },
-                    //checkColor: Color(  0x00FFFFFF),
-                  ),
-                  const Text('Acepto los términos y condiciones'),
-                ],
-              ),
-*/
               TermsCheckbox(value:  formProvider.isAccept, onChanged: (bool? newValue) {
                 setState(() {
                   formProvider.toogleAccept();
                 });
               }),
+
 
               if( !formProvider.isAccept )
                 const Text(
